@@ -26,7 +26,8 @@ source-repository head
 library
   exposed-modules:
       Elementos
-      Lib
+      Escribir
+      Listas
       Tablero
   other-modules:
       Paths_project
