@@ -1,4 +1,4 @@
-module Escribir (escribir) where
+module Escribir (escribir, borrar) where
 
 import Elementos
 import Tablero
@@ -14,12 +14,28 @@ escribir tablero p | tipo p == tipoNinho = escribirNinho tablero (toNinho p)
                    | otherwise = escribirObstaculo tablero (toObstaculo p)
 
 borrar :: Posicion p => Tablero -> p -> Tablero
-borrar tablero p  = tablero
+borrar tablero p  | tipo p == tipoNinho = borrarNinho tablero (toNinho p)
+                  | tipo p == tipoSuciedad = borrarSuciedad tablero (toSuciedad p)
+                  | tipo p == tipoRobot = borrarRobot tablero (toRobot p)
+                  | tipo p == tipoCuna = borrarCuna tablero (toCuna p)
+                  | otherwise = borrarObstaculo tablero (toObstaculo p)
 ----------- -------------------------------------------------------------------------
 
 -----------------borrar------------------------------------------------------------
+borrarNinho :: Tablero -> Ninho -> Tablero
+borrarNinho t n = crearTablero (largo t) (ancho t) (suciedad t) (robots t) (cuna t) (eliminar n (ninhos t)) (obstaculos t)
 
+borrarSuciedad :: Tablero -> Suciedad -> Tablero
+borrarSuciedad t s = crearTablero (largo t) (ancho t) (eliminar s (suciedad t)) (robots t) (cuna t) (ninhos t) (obstaculos t)
 
+borrarRobot :: Tablero -> Robot -> Tablero
+borrarRobot t r = crearTablero (largo t) (ancho t) (suciedad t) (eliminar r (robots t)) (cuna t) (ninhos t) (obstaculos t)
+
+borrarCuna :: Tablero -> Cuna -> Tablero
+borrarCuna t c = crearTablero (largo t) (ancho t) (suciedad t) (robots t) (eliminar c (cuna t)) (ninhos t) (obstaculos t)
+
+borrarObstaculo :: Tablero -> Obstaculo -> Tablero
+borrarObstaculo t o = crearTablero (largo t) (ancho t) (suciedad t) (robots t) (cuna t) (ninhos t) (eliminar o (obstaculos t))
 ---------------- escribir--------------------------------------------
 
 escribirNinho :: Tablero -> Ninho -> Tablero

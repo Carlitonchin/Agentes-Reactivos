@@ -1,7 +1,7 @@
 module Elementos
     ( 
     crearNinho, crearRobot, crearSuciedad, crearCuna, crearObstaculo, tipo,
-    tipoNinho, tipoCuna, tipoObstaculo, tipoRobot, tipoSuciedad,
+    tipoNinho, tipoCuna, tipoObstaculo, tipoRobot, tipoSuciedad,tipoVacio,
     toNinho, toRobot, toObstaculo, toSuciedad, toCuna,
     Ninho, Robot, Suciedad, Cuna, Obstaculo, Posicion,
     x, y
@@ -17,18 +17,20 @@ class Posicion p where
     toSuciedad :: p -> Suciedad
     toCuna :: p -> Cuna
 
-data Ninho = Ninho {xNinho::Int, yNinho::Int} deriving(Show)
-data Robot = Robot {xRobot::Int, yRobot::Int} deriving(Show)
-data Suciedad = Suciedad {xSuciedad::Int, ySuciedad::Int} deriving(Show)
-data Cuna = Cuna {xCuna::Int, yCuna::Int} deriving(Show)
-data Obstaculo = Obstaculo {xObstaculo::Int, yObstaculo::Int} deriving(Show)
+data Ninho = Ninho {xNinho::Int, yNinho::Int} deriving(Show, Eq)
+data Robot = Robot {xRobot::Int, yRobot::Int} deriving(Show, Eq)
+data Suciedad = Suciedad {xSuciedad::Int, ySuciedad::Int} deriving(Show, Eq)
+data Cuna = Cuna {xCuna::Int, yCuna::Int} deriving(Show, Eq)
+data Obstaculo = Obstaculo {xObstaculo::Int, yObstaculo::Int} deriving(Show, Eq)
 
 tipoNinho = "Ninho"
 tipoRobot = "Robot"
 tipoSuciedad = "Suciedad"  
 tipoCuna = "Cuna"
 tipoObstaculo = "Obstaculo"
+tipoVacio = "Vacio"
 
+crearNinho :: Int->Int -> Ninho
 crearNinho x y = Ninho x y
 crearRobot x y = Robot x y
 crearSuciedad x y = Suciedad x y
@@ -40,6 +42,7 @@ instance Posicion Ninho where
     y a = yNinho a
     tipo a = tipoNinho
     toNinho a = crearNinho (x a) (y a)
+
 
 instance Posicion Robot where
     x a = xRobot a
