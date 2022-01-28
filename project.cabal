@@ -29,6 +29,7 @@ library
       Escribir
       Listas
       Movimiento
+      Pintar
       Tablero
   other-modules:
       Paths_project

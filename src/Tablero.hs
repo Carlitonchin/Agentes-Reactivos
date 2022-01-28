@@ -1,7 +1,7 @@
 module Tablero
     ( Tablero, iniciarTablero, crearTablero, get, estaVacio, hayObstaculo, noHayObstaculo,
-    ninhoPuedeMoverse,
-    largo, ancho, suciedad, robots, cuna, ninhos, obstaculos
+    ninhoPuedeMoverse, hayNinho, estaCargado, robotPuedeMoverse,
+    largo, ancho, suciedad, robots, cuna, ninhos, obstaculos, cargados
     ) where
 
 import Elementos
@@ -13,24 +13,25 @@ data Tablero = Tablero{largo::Int,
                          robots::[Robot],
                          cuna::[Cuna],
                          ninhos::[Ninho],
-                         obstaculos::[Obstaculo]
+                         obstaculos::[Obstaculo],
+                         cargados :: [Cargado]
                          } deriving (Show)
 
-crearTablero largo ancho suciedad robots cuna ninhos obstaculos =
-    Tablero largo ancho suciedad robots cuna ninhos obstaculos
-
+crearTablero largo ancho suciedad robots cuna ninhos obstaculos cargados =
+    Tablero largo ancho suciedad robots cuna ninhos obstaculos cargados
 
 
 iniciarTablero :: Int->Int->Tablero
-iniciarTablero largo ancho = Tablero largo ancho [] [] [] [] []
+iniciarTablero largo ancho = Tablero largo ancho [] [] [] [] [] []
 
 get :: Tablero -> Int -> Int -> String
 get tablero x y | pertenece (crearNinho x y) (ninhos tablero) = tipoNinho
+                | pertenece (crearRobot x y) (robots tablero) = tipoRobot
                 | pertenece (crearCuna x y) (cuna tablero) = tipoCuna
                 | pertenece (crearObstaculo x y) (obstaculos tablero) = tipoObstaculo
-                | pertenece (crearRobot x y) (robots tablero) = tipoRobot
                 | pertenece (crearSuciedad x y) (suciedad tablero) = tipoSuciedad
                 | otherwise = tipoVacio
+
 
 estaVacio :: Tablero -> Int -> Int -> Bool
 estaVacio tablero x y = (get tablero x y) == tipoVacio
@@ -44,4 +45,13 @@ noHayObstaculo tablero x y = not (hayObstaculo tablero x y)
 hayCuna :: Tablero -> Int -> Int -> Bool
 hayCuna t x y = (get t x y) == tipoCuna
 
-ninhoPuedeMoverse t x y = (estaVacio t x y) || (hayCuna t x y)
+hayNinho :: Tablero -> Int -> Int -> Bool
+hayNinho t x y = (get t x y) == tipoNinho
+
+ninhoPuedeMoverse :: Tablero -> Ninho -> Int -> Int -> Bool
+ninhoPuedeMoverse t n xx yy = ((estaVacio t xx yy) || (hayCuna t xx yy)) && not(estaCargado t (x n) (y n))
+
+robotPuedeMoverse :: Tablero -> Int -> Int -> Bool
+robotPuedeMoverse t nx ny = (noHayObstaculo t nx ny) && not(pertenece (crearRobot nx ny) (robots t))
+
+estaCargado t x y = pertenece (crearCargado x y) (cargados t)
