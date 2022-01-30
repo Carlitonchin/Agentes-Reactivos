@@ -15,7 +15,7 @@ data Tablero = Tablero{largo::Int,
                          ninhos::[Ninho],
                          obstaculos::[Obstaculo],
                          cargados :: [Cargado]
-                         } deriving (Show)
+                         } deriving (Show, Eq)
 
 crearTablero largo ancho suciedad robots cuna ninhos obstaculos cargados =
     Tablero largo ancho suciedad robots cuna ninhos obstaculos cargados
@@ -48,10 +48,13 @@ hayCuna t x y = (get t x y) == tipoCuna
 hayNinho :: Tablero -> Int -> Int -> Bool
 hayNinho t x y = (get t x y) == tipoNinho
 
-ninhoPuedeMoverse :: Tablero -> Ninho -> Int -> Int -> Bool
-ninhoPuedeMoverse t n xx yy = ((estaVacio t xx yy) || (hayCuna t xx yy)) && not(estaCargado t (x n) (y n))
+noEstaEnElCorral :: Tablero -> Ninho -> Bool
+noEstaEnElCorral t n = not (pertenece (crearCuna (x n) (y n)) (cuna t))
 
-robotPuedeMoverse :: Tablero -> Int -> Int -> Bool
-robotPuedeMoverse t nx ny = (noHayObstaculo t nx ny) && not(pertenece (crearRobot nx ny) (robots t))
+ninhoPuedeMoverse :: Tablero -> Ninho -> Int -> Int -> Bool
+ninhoPuedeMoverse t n xx yy = ((estaVacio t xx yy) || (hayCuna t xx yy)) && not(estaCargado t (x n) (y n)) && noEstaEnElCorral t n
+
+robotPuedeMoverse :: Tablero -> Robot -> Int -> Int -> Bool
+robotPuedeMoverse t r nx ny = (noHayObstaculo t nx ny) && not(pertenece (crearRobot nx ny) (robots t)) && (not (hayNinho t nx ny) || not (estaCargado t (x r) (y r)))
 
 estaCargado t x y = pertenece (crearCargado x y) (cargados t)
