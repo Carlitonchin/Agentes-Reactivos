@@ -6,6 +6,7 @@ import Listas
 import Movimiento
 import Pintar
 
+
 -- sudo apt install fonts-emojione
 
 tablero = iniciarTablero 4 4
@@ -42,8 +43,11 @@ d2 = moverDerecha d1 (crearRobot 1 3) --1 0
 dd2 = descargar d2 2 3
 ra = moverArriba dd2 (crearRobot 2 3) --0 (-1)
 nl = moverIzquierda ra (crearNinho 2 3) --(-1) 0
-limpio = limpiar nl (crearRobot 1 1)
+--limpio = limpiar nl (crearRobot 1 1)
+robotIzq = moverIzquierda nl (crearRobot 1 1)
+robotDown = moverAbajo robotIzq (crearRobot 0 1)
+robotSinCargar = descargar robotDown 0 2
 
 main :: IO ()
-main = putStrLn (pintarTablero limpio)
+main = putStrLn (pintarTablero robotSinCargar)
 

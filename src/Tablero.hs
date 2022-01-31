@@ -1,7 +1,7 @@
 module Tablero
     ( Tablero, iniciarTablero, crearTablero, get, estaVacio, hayObstaculo, noHayObstaculo,
     ninhoPuedeMoverse, hayNinho, estaCargado, robotPuedeMoverse,
-    largo, ancho, suciedad, robots, cuna, ninhos, obstaculos, cargados
+    largo, ancho, suciedad, robots, cuna, ninhos, obstaculos, cargados, semilla
     ) where
 
 import Elementos
@@ -14,15 +14,16 @@ data Tablero = Tablero{largo::Int,
                          cuna::[Cuna],
                          ninhos::[Ninho],
                          obstaculos::[Obstaculo],
-                         cargados :: [Cargado]
+                         cargados :: [Cargado],
+                         semilla :: Int
                          } deriving (Show, Eq)
 
-crearTablero largo ancho suciedad robots cuna ninhos obstaculos cargados =
-    Tablero largo ancho suciedad robots cuna ninhos obstaculos cargados
+crearTablero largo ancho suciedad robots cuna ninhos obstaculos cargados semilla =
+    Tablero largo ancho suciedad robots cuna ninhos obstaculos cargados semilla
 
 
 iniciarTablero :: Int->Int->Tablero
-iniciarTablero largo ancho = Tablero largo ancho [] [] [] [] [] []
+iniciarTablero largo ancho = Tablero largo ancho [] [] [] [] [] [] 1
 
 get :: Tablero -> Int -> Int -> String
 get tablero x y | pertenece (crearNinho x y) (ninhos tablero) = tipoNinho
