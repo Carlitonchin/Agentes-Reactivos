@@ -5,11 +5,11 @@ import Escribir
 import Listas
 import Movimiento
 import Pintar
-
+import Aleatorio
 
 -- sudo apt install fonts-emojione
 
-tablero = iniciarTablero 4 4
+tablero = iniciarTablero 4 4 1
 tableroConNinho = escribir tablero (crearNinho 0 0)
 tableroSucio = escribir tableroConNinho (crearSuciedad 1 1)
 tableroRobot = escribir tableroSucio (crearRobot 1 3)
@@ -48,6 +48,17 @@ robotIzq = moverIzquierda nl (crearRobot 1 1)
 robotDown = moverAbajo robotIzq (crearRobot 0 1)
 robotSinCargar = descargar robotDown 0 2
 
-main :: IO ()
-main = putStrLn (pintarTablero robotSinCargar)
 
+sem = 1
+tableroSemilla = iniciarTablero 4 4 sem
+conCunas = generarCuna tableroSemilla 4
+casillasVacias = getEspaciosVacios tableroSemilla
+trandom = random tableroSemilla
+trandom2 = random trandom
+nuevaPosicion = getPosicion trandom2 casillasVacias
+nx = indexar nuevaPosicion 0
+ny = indexar nuevaPosicion 1
+array = [[1,1], [0,0]]
+n1 = indexarLista array 1
+main :: IO ()
+main = putStrLn (pintarTablero conCunas)

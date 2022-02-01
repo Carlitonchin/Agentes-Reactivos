@@ -1,6 +1,6 @@
 module Tablero
     ( Tablero, iniciarTablero, crearTablero, get, estaVacio, hayObstaculo, noHayObstaculo,
-    ninhoPuedeMoverse, hayNinho, estaCargado, robotPuedeMoverse,
+    ninhoPuedeMoverse, hayNinho, estaCargado, robotPuedeMoverse, getEspaciosVacios,
     largo, ancho, suciedad, robots, cuna, ninhos, obstaculos, cargados, semilla
     ) where
 
@@ -22,8 +22,8 @@ crearTablero largo ancho suciedad robots cuna ninhos obstaculos cargados semilla
     Tablero largo ancho suciedad robots cuna ninhos obstaculos cargados semilla
 
 
-iniciarTablero :: Int->Int->Tablero
-iniciarTablero largo ancho = Tablero largo ancho [] [] [] [] [] [] 1
+iniciarTablero :: Int -> Int -> Int ->Tablero
+iniciarTablero largo ancho semilla = Tablero largo ancho [] [] [] [] [] [] semilla
 
 get :: Tablero -> Int -> Int -> String
 get tablero x y | pertenece (crearNinho x y) (ninhos tablero) = tipoNinho
@@ -59,3 +59,12 @@ robotPuedeMoverse :: Tablero -> Robot -> Int -> Int -> Bool
 robotPuedeMoverse t r nx ny = (noHayObstaculo t nx ny) && not(pertenece (crearRobot nx ny) (robots t)) && (not (hayNinho t nx ny) || not (estaCargado t (x r) (y r)))
 
 estaCargado t x y = pertenece (crearCargado x y) (cargados t)
+
+getEspaciosVacios :: Tablero -> [[Int]]
+getEspaciosVacios t = getEspaciosVaciosRecursivo t 0 0
+
+getEspaciosVaciosRecursivo :: Tablero -> Int -> Int -> [[Int]]
+getEspaciosVaciosRecursivo t px py | py == largo t = []
+                                   | px == ancho t = getEspaciosVaciosRecursivo t 0 (py+1)
+                                   | estaVacio t px py = [[px, py]] ++ (getEspaciosVaciosRecursivo t (px + 1) py) 
+                                   | otherwise = getEspaciosVaciosRecursivo t (px + 1) py
