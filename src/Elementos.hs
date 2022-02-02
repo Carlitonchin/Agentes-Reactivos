@@ -1,11 +1,6 @@
 module Elementos
-    ( 
-    crearNinho, crearRobot, crearSuciedad, crearCuna, crearObstaculo, tipo,crearCargado,
-    tipoNinho, tipoCuna, tipoObstaculo, tipoRobot, tipoSuciedad,tipoVacio, crearVacio,
-    toNinho, toRobot, toObstaculo, toSuciedad, toCuna,
-    Ninho, Robot, Suciedad, Cuna, Obstaculo, Posicion, Cargado, Vacio,
-    x, y
-    ) where
+   
+ where
 
 class Posicion p where
     x :: p -> Int
@@ -23,6 +18,7 @@ data Suciedad = Suciedad {xSuciedad::Int, ySuciedad::Int} deriving(Show, Eq)
 data Cuna = Cuna {xCuna::Int, yCuna::Int} deriving(Show, Eq)
 data Obstaculo = Obstaculo {xObstaculo::Int, yObstaculo::Int} deriving(Show, Eq)
 data Cargado = Cargado {xCargado :: Int, yCargado::Int} deriving(Show, Eq)
+data Objetivo = Objetivo {robot :: Robot, costo :: Int, tipoObjetivo :: String,  paso :: (Int, Int)} deriving (Show)
 data Vacio = Vacio
 
 tipoNinho = "Ninho"
@@ -31,6 +27,11 @@ tipoSuciedad = "Suciedad"
 tipoCuna = "Cuna"
 tipoObstaculo = "Obstaculo"
 tipoVacio = "Vacio"
+
+objCargarNinho = "cargarNinho"
+objLimpiar = "limpiar"
+objLlevarACuna = "llevarCuna"
+objMoverCuna = "moverCuna"
 
 crearNinho :: Int->Int -> Ninho
 crearNinho x y = Ninho x y
@@ -41,8 +42,12 @@ crearObstaculo x y = Obstaculo x y
 crearCargado x y = Cargado x y
 crearVacio = Vacio
 
+crearObjetivo :: String -> Robot -> Int -> (Int, Int) -> Objetivo
+crearObjetivo tipo r costo p = Objetivo r costo tipo p
+
 instance Posicion Vacio where
     tipo a = tipoVacio
+    toNinho = error "tu eres un mojon de vaca, color espinaca"
 
 instance Posicion Ninho where
     x a = xNinho a

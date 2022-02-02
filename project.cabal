@@ -30,6 +30,7 @@ library
       Escribir
       Listas
       Movimiento
+      Objetivos
       Pintar
       Tablero
   other-modules:

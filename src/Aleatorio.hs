@@ -6,7 +6,7 @@ import Elementos
 import Listas
 
 random :: Tablero -> Tablero
-random t = crearTablero (largo t) (ancho t) (suciedad t) (robots t) (cuna t) (ninhos t) (obstaculos t) (cargados t) (generar (semilla t))
+random t = crearTablero (largo t) (ancho t) (suciedad t) (robots t) (cuna t) (ninhos t) (obstaculos t) (cargados t) (objetivos t) (generar (semilla t))
 
 generar :: Int -> Int
 generar s = div (div (div ((s*25+44) * 5) 2) 3)  2
@@ -48,8 +48,48 @@ pintarCunas t [] = t
 pintarCunas t (f:r) = let nuevoTablero = escribir t (crearCuna (indexar f 0) (indexar f 1))
                       in pintarCunas nuevoTablero r  
 
-generarCuna :: Tablero -> Int -> Tablero
-generarCuna t cant = let disponibles = getEspaciosVacios t 
-                         seleccionadas = []
-                         listas = casillasAdyacentesParaCuna t cant seleccionadas disponibles
+generarCunas :: Tablero -> Int -> Tablero
+generarCunas t cant = let disponibles = getEspaciosVacios t 
+                          seleccionadas = []
+                          listas = casillasAdyacentesParaCuna t cant seleccionadas disponibles
                     in pintarCunas (fst listas) (snd listas)
+
+generarNinhos :: Tablero -> Int -> Tablero
+generarNinhos t cant | cant == 0 = t 
+                     | otherwise = generarNinhos nuevoTablero (cant - 1)
+                     where tRandom = random(t)
+                           espaciosVacios = getEspaciosVacios tRandom
+                           posicionSeleccionada = getPosicion tRandom espaciosVacios
+                           nx = indexar posicionSeleccionada 0
+                           ny = indexar posicionSeleccionada 1
+                           nuevoTablero = escribir tRandom (crearNinho nx ny)
+
+generarRobots :: Tablero -> Int -> Tablero
+generarRobots t cant | cant == 0 = t 
+                     | otherwise = generarRobots nuevoTablero (cant - 1)
+                     where tRandom = random(t)
+                           espaciosVacios = getEspaciosVacios tRandom
+                           posicionSeleccionada = getPosicion tRandom espaciosVacios
+                           nx = indexar posicionSeleccionada 0
+                           ny = indexar posicionSeleccionada 1
+                           nuevoTablero = escribir tRandom (crearRobot nx ny)
+
+generarObstaculos :: Tablero -> Int -> Tablero
+generarObstaculos t cant | cant == 0 = t 
+                         | otherwise = generarObstaculos nuevoTablero (cant - 1)
+                          where tRandom = random(t)
+                                espaciosVacios = getEspaciosVacios tRandom
+                                posicionSeleccionada = getPosicion tRandom espaciosVacios
+                                nx = indexar posicionSeleccionada 0
+                                ny = indexar posicionSeleccionada 1
+                                nuevoTablero = escribir tRandom (crearObstaculo nx ny)
+
+generarSuciedades :: Tablero -> Int -> Tablero
+generarSuciedades t cant | cant == 0 = t 
+                         | otherwise = generarSuciedades nuevoTablero (cant - 1)
+                          where tRandom = random(t)
+                                espaciosVacios = getEspaciosVacios tRandom
+                                posicionSeleccionada = getPosicion tRandom espaciosVacios
+                                nx = indexar posicionSeleccionada 0
+                                ny = indexar posicionSeleccionada 1
+                                nuevoTablero = escribir tRandom (crearSuciedad nx ny)

@@ -1,8 +1,5 @@
 module Tablero
-    ( Tablero, iniciarTablero, crearTablero, get, estaVacio, hayObstaculo, noHayObstaculo,
-    ninhoPuedeMoverse, hayNinho, estaCargado, robotPuedeMoverse, getEspaciosVacios,
-    largo, ancho, suciedad, robots, cuna, ninhos, obstaculos, cargados, semilla
-    ) where
+where
 
 import Elementos
 import Listas
@@ -15,15 +12,16 @@ data Tablero = Tablero{largo::Int,
                          ninhos::[Ninho],
                          obstaculos::[Obstaculo],
                          cargados :: [Cargado],
+                         objetivos :: [Objetivo],
                          semilla :: Int
-                         } deriving (Show, Eq)
+                         } deriving (Show)
 
-crearTablero largo ancho suciedad robots cuna ninhos obstaculos cargados semilla =
-    Tablero largo ancho suciedad robots cuna ninhos obstaculos cargados semilla
+crearTablero largo ancho suciedad robots cuna ninhos obstaculos cargados objetivos semilla =
+    Tablero largo ancho suciedad robots cuna ninhos obstaculos cargados objetivos semilla
 
 
 iniciarTablero :: Int -> Int -> Int ->Tablero
-iniciarTablero largo ancho semilla = Tablero largo ancho [] [] [] [] [] [] semilla
+iniciarTablero largo ancho semilla = Tablero largo ancho [] [] [] [] [] [] [] semilla
 
 get :: Tablero -> Int -> Int -> String
 get tablero x y | pertenece (crearNinho x y) (ninhos tablero) = tipoNinho
@@ -46,6 +44,9 @@ noHayObstaculo tablero x y = not (hayObstaculo tablero x y)
 hayCuna :: Tablero -> Int -> Int -> Bool
 hayCuna t x y = (get t x y) == tipoCuna
 
+haySuciedad :: Tablero -> Int -> Int -> Bool
+haySuciedad t x y = (get t x y) == tipoSuciedad
+
 hayNinho :: Tablero -> Int -> Int -> Bool
 hayNinho t x y = (get t x y) == tipoNinho
 
@@ -53,7 +54,7 @@ noEstaEnElCorral :: Tablero -> Ninho -> Bool
 noEstaEnElCorral t n = not (pertenece (crearCuna (x n) (y n)) (cuna t))
 
 ninhoPuedeMoverse :: Tablero -> Ninho -> Int -> Int -> Bool
-ninhoPuedeMoverse t n xx yy = ((estaVacio t xx yy) || (hayCuna t xx yy)) && not(estaCargado t (x n) (y n)) && noEstaEnElCorral t n
+ninhoPuedeMoverse t n xx yy = (estaVacio t xx yy) && (not(estaCargado t (x n) (y n))) && (noEstaEnElCorral t n)
 
 robotPuedeMoverse :: Tablero -> Robot -> Int -> Int -> Bool
 robotPuedeMoverse t r nx ny = (noHayObstaculo t nx ny) && not(pertenece (crearRobot nx ny) (robots t)) && (not (hayNinho t nx ny) || not (estaCargado t (x r) (y r)))
