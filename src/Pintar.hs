@@ -1,5 +1,4 @@
-module Pintar (soloNinhoText, soloRobotText, soloCunaText, obstaculoText, soloSuciedadText,
-                pintarTablero                                                    )
+module Pintar 
  where
 
 import Elementos

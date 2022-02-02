@@ -14,7 +14,7 @@ data Tablero = Tablero{largo::Int,
                          cargados :: [Cargado],
                          objetivos :: [Objetivo],
                          semilla :: Int
-                         } deriving (Show)
+                         } deriving (Show, Eq)
 
 crearTablero largo ancho suciedad robots cuna ninhos obstaculos cargados objetivos semilla =
     Tablero largo ancho suciedad robots cuna ninhos obstaculos cargados objetivos semilla

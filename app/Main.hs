@@ -7,8 +7,10 @@ import Movimiento
 import Pintar
 import Aleatorio
 import Objetivos
+import FuncionAgentes
 
 -- sudo apt install fonts-emojione
+
 
 tablero = iniciarTablero 4 4 1
 tableroConNinho = escribir tablero (crearNinho 0 0)
@@ -50,13 +52,13 @@ robotDown = moverAbajo robotIzq (crearRobot 0 1)
 robotSinCargar = descargar robotDown 0 2
 
 
-sem = 11232131213
-tableroSemilla = iniciarTablero 2 1 sem
+sem = 112321312112
+tableroSemilla = iniciarTablero 4 4 sem
 conCunas = generarCunas tableroSemilla 8
 conNinhos = generarNinhos conCunas 8
-conRobots = generarRobots tableroSemilla 1
+conRobots = generarRobots tableroSemilla 2
 conObstaculos = generarObstaculos conRobots 3
-conSuciedad = generarSuciedades conRobots 1
+conSuciedad = generarSuciedades conRobots 10
 casillasVacias = getEspaciosVacios tableroSemilla
 trandom = random tableroSemilla
 trandom2 = random trandom
@@ -66,9 +68,19 @@ ny = indexar nuevaPosicion 1
 array = [[1,1], [0,0]]
 n1 = indexarLista array 1
 tableroBfs = bfs conSuciedad
-main :: IO ()
-main = do print (tableroBfs)
+--o = Objetivo {robot = Robot {xRobot = 3, yRobot = 2, cargando = False}, costo = 4, tipoObjetivo = "limpiar", paso = (2,2), objx = 0, objy = 2}
+objHastaAhora = crearObjetivo objVagancia (crearRobot 0 0) infinito (-1,-1) 0 0
 
-f = rapido
-    where
-        rapido = 5
+
+main :: IO ()
+main =  do
+    putStrLn (iteraciones conSuciedad 20)
+    
+    
+    --putStrLn (pintarTablero (iteracion conSuciedad))
+
+iteraciones :: Tablero -> Int -> String
+iteraciones t i 
+    | i == 0 = pintarTablero t
+    | otherwise = let nuevoTablero = iteracion t
+                 in pintarTablero t ++ "\n\n\n" ++ (iteraciones nuevoTablero (i-1))
