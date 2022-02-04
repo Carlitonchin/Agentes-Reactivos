@@ -14,8 +14,8 @@ quitarTodos :: Eq a => [a] -> [a] -> [a]
 quitarTodos [] fuente = fuente
 quitarTodos (f:r) fuente = quitarTodos r (eliminar f fuente)
 
-indexar :: [Int] -> Int -> Int
-indexar [] i = -1
+indexar :: [a] -> Int -> a
+indexar [] i = error "Index out of range"
 indexar (f:r) i | i == 0 = f
                 | otherwise = indexar r (i-1)
 

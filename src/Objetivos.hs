@@ -159,7 +159,7 @@ bfsElemento t r marcadas (pos:cola) =
 agregarObjetivo :: Tablero -> Robot -> Int -> Int -> Float-> Tablero
 agregarObjetivo t r px py costo
     | tipoElemento == tipoSuciedad = agregarObjetivoSuciedad t r px py costo
-    | tipoElemento == tipoNinho && not (estaCargado t xr yr) && not (habemusCuna t px py) = agregarObjetivoNinho t r px py costo
+    | tipoElemento == tipoNinho && not (estaCargado t xr yr) && not (habemusCuna t px py) = agregarObjetivoNinho t r px py (costo/2)
     | tipoElemento == tipoCuna && (estaCargado t xr yr) = agregarObjetivoCuna t r px py (costo/1.5)
     | otherwise = t
     where

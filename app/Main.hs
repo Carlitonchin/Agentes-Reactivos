@@ -13,25 +13,31 @@ import MovimientoNinhos
 -- sudo apt install fonts-emojione
 
 
-sem = 12321121321321
-tableroSemilla = iniciarTablero 8 5 sem
-conNinhos = generarNinhos tableroSemilla 5
+sem = 109009211157976
+tableroSemilla = iniciarTablero 6 6 sem
+conNinhos = generarNinhos tableroSemilla 3
 conRobots = generarRobots conNinhos 2
-conCuna = generarCunas conRobots 5
-conObstaculos = generarObstaculos conCuna 10
-conSuciedad = generarSuciedades conObstaculos 3
+conCuna = generarCunas conRobots 3
+conObstaculos = generarObstaculos conCuna 3
+conSuciedad = generarSuciedades conObstaculos 0
 
-cant = 25
+
+cant = 30
 
 pintura = iteracionesPintar conSuciedad cant
 tablero = iteracionesTablero conSuciedad cant
 --obs = escribir tablero (crearObstaculo 2 3)
 ma = robotPuedeMoverse tablero (crearRobot 4 0) 4 2
 --md = mover2Derecha ma (crearRobot 1 2)
-
+t = getCuadricula tablero (crearNinho 0 0)
+nt = getNinhosCuadricula tablero t []
+qn = moverNinhosDeCuadricula tablero nt
 main :: IO ()
 main =  do
     putStrLn pintura
+    -- print t
+    -- print nt
+    -- putStrLn (pintarTablero qn)
     --print "\n"
     --  print (robotPuedeMoverse tablero (crearRobot 3 0) 0 (-2))
     --putStrLn (pintarTablero tablero)

@@ -84,8 +84,26 @@ estaCargado t x y = pertenece (crearCargado x y) (cargados t)
 getEspaciosVacios :: Tablero -> [[Int]]
 getEspaciosVacios t = getEspaciosVaciosRecursivo t 0 0
 
+getEspaciosLlenosTupla :: Tablero -> [(Int, Int)]
+getEspaciosLlenosTupla t = getEspaciosLlenosTuplaRecursivo t 0 0
+
+getEspaciosLlenosTuplaRecursivo :: Tablero -> Int -> Int -> [(Int, Int)]
+getEspaciosLlenosTuplaRecursivo t px py 
+    | py == largo t = []
+    | px == ancho t = getEspaciosLlenosTuplaRecursivo t 0 (py+1)
+    | not (estaVacio t px py) = [(px, py)] ++ (getEspaciosLlenosTuplaRecursivo t (px + 1) py) 
+    | otherwise = getEspaciosLlenosTuplaRecursivo t (px + 1) py
+
 getEspaciosVaciosRecursivo :: Tablero -> Int -> Int -> [[Int]]
 getEspaciosVaciosRecursivo t px py | py == largo t = []
                                    | px == ancho t = getEspaciosVaciosRecursivo t 0 (py+1)
                                    | estaVacio t px py = [[px, py]] ++ (getEspaciosVaciosRecursivo t (px + 1) py) 
                                    | otherwise = getEspaciosVaciosRecursivo t (px + 1) py
+
+ninhosNoCargadosNiEnCuna :: Tablero -> [Ninho] -> [Ninho] -> [Ninho]
+ninhosNoCargadosNiEnCuna t [] acumulado = acumulado
+ninhosNoCargadosNiEnCuna t (n1:rn) acumulado =
+    let nuevoAcumulado = if (not (estaCargado t (x n1) (y n1))) && (noEstaEnElCorral t n1)
+                         then agregar n1 acumulado
+                         else acumulado
+    in ninhosNoCargadosNiEnCuna t rn nuevoAcumulado 

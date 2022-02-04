@@ -5,19 +5,27 @@ import Tablero
 import Elementos
 import Listas
 import Movimiento
+import Escribir
+import Pintar
 
 turnoAmbiente :: Tablero -> Tablero
-turnoAmbiente t = moverNinhos t (ninhos t)
+turnoAmbiente t = 
+    let ninhosMovibles = ninhosNoCargadosNiEnCuna t (ninhos t) []
+            
+    in moverNinhos t ninhosMovibles []
 
-moverNinhos :: Tablero -> [Ninho] -> Tablero
-moverNinhos t [] = t
-moverNinhos t (n1:rn) =
+moverNinhos :: Tablero -> [Ninho] -> [Ninho] -> Tablero
+moverNinhos t [] marcados = t
+moverNinhos t (n1:rn) marcados =
     let
         cuadricula = getCuadricula t n1
         ninhosCuadricula = getNinhosCuadricula t cuadricula []
-        nuevoTablero = moverNinhosDeCuadricula t ninhosCuadricula
-        restoNinhos = quitarTodos ninhosCuadricula rn
-    in moverNinhos nuevoTablero restoNinhos
+        noMarcados = quitarTodos marcados ninhosCuadricula
+        nuevoTablero = moverNinhosDeCuadricula t noMarcados
+        restoNinhos = quitarTodos noMarcados rn
+        tableroSucio = ensuciar nuevoTablero cuadricula (length noMarcados)
+        nuevoMarcados = marcados ++ noMarcados 
+    in moverNinhos tableroSucio restoNinhos nuevoMarcados
 
 moverNinhosDeCuadricula :: Tablero -> [Ninho] -> Tablero
 moverNinhosDeCuadricula t [] = t
@@ -36,15 +44,15 @@ moverEsteNinho t n =
     let 
         tRandom = random t
         movs = [moverArriba, moverDerecha, moverAbajo, moverIzquierda]
-        rNum = randomNum (semilla tRandom) (length movs)
+        rNum = randomNum (length movs) (semilla tRandom) 
         direccion = indexarMovimiento movs rNum
-    in direccion t n
+    in direccion tRandom n
 
 getNinhosCuadricula:: Tablero -> [(Int, Int)] -> [Ninho]-> [Ninho]
 getNinhosCuadricula t [] acumulado = acumulado
 getNinhosCuadricula t (c1:rc) acumulado =
     let
-        nuevoAcumulado = if hayNinho t cx cy
+        nuevoAcumulado = if (hayNinho t cx cy) && (not (estaCargado t cx cy)) && (not (habemusCuna t cx cy))
                          then agregar (crearNinho cx cy) acumulado 
                          else acumulado
     in getNinhosCuadricula t rc nuevoAcumulado
@@ -104,3 +112,33 @@ getCuadriculaPorCentro centro = [(cx, cy), (cx+1, cy), (cx-1, cy), (cx, cy+1), (
     where
         cx = fst centro
         cy = snd centro
+
+ensuciar :: Tablero ->  [(Int,Int)] -> Int -> Tablero
+ensuciar t cuadricula cant = 
+    let
+        espaciosLlenos = getEspaciosLlenosTupla t
+        espaciosLibresCuadricula = quitarTodos espaciosLlenos cuadricula
+        randomT = random t
+        s = semilla randomT
+        maxSuciedad = if cant == 1 
+                      then 1
+                      else (if cant == 2
+                           then 3 
+                           else 6)
+        cantSuciedad = randomNum (maxSuciedad+1) s
+        tableroSucio = generarSuciedadesCuadricula t espaciosLibresCuadricula cantSuciedad
+    in tableroSucio
+
+generarSuciedadesCuadricula :: Tablero -> [(Int, Int)] -> Int -> Tablero
+generarSuciedadesCuadricula t espacios cant
+    | length espacios == 0 || cant == 0 = t
+    | otherwise = generarSuciedadesCuadricula tableroSucio espacioDeMenos (cant - 1)
+    where
+        tRandom = random t
+        s = semilla tRandom
+        randomIndex = randomNum (length espacios) s
+        casilla = indexar espacios randomIndex
+        espacioDeMenos = eliminar casilla espacios
+        casillaX = fst casilla
+        casillaY = snd casilla
+        tableroSucio = escribir tRandom (crearSuciedad casillaX casillaY)
