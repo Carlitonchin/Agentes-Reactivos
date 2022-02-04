@@ -14,7 +14,7 @@ generar s = div (div (div ((s*25+44) * 5) 2) 3)  2
 randomNum :: Int -> Int -> Int
 randomNum max sem = abs (mod sem max)
 
-getPosicion :: Tablero -> [[Int]] -> [Int]
+getPosicion :: Tablero -> [[a]] -> [a]
 getPosicion t espaciosVacios = let rNum = randomNum (length espaciosVacios) (semilla t)
                                in indexarLista espaciosVacios rNum
 

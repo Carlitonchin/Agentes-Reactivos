@@ -31,6 +31,7 @@ library
       FuncionAgentes
       Listas
       Movimiento
+      MovimientoNinhos
       Objetivos
       Pintar
       Tablero

@@ -8,11 +8,12 @@ import Pintar
 import Aleatorio
 import Objetivos
 import FuncionAgentes
+import MovimientoNinhos
 
 -- sudo apt install fonts-emojione
 
 
-sem = 1123141221323
+sem = 12321121321321
 tableroSemilla = iniciarTablero 8 5 sem
 conNinhos = generarNinhos tableroSemilla 5
 conRobots = generarRobots conNinhos 2
@@ -49,9 +50,10 @@ main =  do
 
 iteracionesPintar :: Tablero -> Int -> String
 iteracionesPintar t i 
-    | i == 0 = (show (objetivos t)) ++ "\n" ++ pintarTablero t ++ "\n" 
+    | i == 0 = (show (objetivos t)) ++ "\n" ++ pintarTablero t
     | otherwise = let nuevoTablero = iteracion t
-                 in (show (objetivos t)) ++ "\n" ++ pintarTablero t  ++ "\n\n\n" ++ (iteracionesPintar nuevoTablero (i-1))
+                      movNinhos = turnoAmbiente nuevoTablero
+                 in (show (objetivos t)) ++ "\n" ++ pintarTablero t ++ (iteracionesPintar movNinhos (i-1))
 
 
 iteracionesTablero :: Tablero -> Int -> Tablero
