@@ -18,7 +18,7 @@ data Suciedad = Suciedad {xSuciedad::Int, ySuciedad::Int} deriving(Show, Eq)
 data Cuna = Cuna {xCuna::Int, yCuna::Int} deriving(Show, Eq)
 data Obstaculo = Obstaculo {xObstaculo::Int, yObstaculo::Int} deriving(Show, Eq)
 data Cargado = Cargado {xCargado :: Int, yCargado::Int} deriving(Show, Eq)
-data Objetivo = Objetivo {robot :: Robot, costo :: Int, tipoObjetivo :: String,  paso :: (Int, Int), objx :: Int, objy :: Int} deriving (Show, Eq)
+data Objetivo = Objetivo {robot :: Robot, costo :: Float, tipoObjetivo :: String,  paso :: (Int, Int), objx :: Int, objy :: Int} deriving (Show, Eq)
 data Vacio = Vacio
 
 tipoNinho = "Ninho"
@@ -31,9 +31,10 @@ tipoVacio = "Vacio"
 objCargarNinho = "cargarNinho"
 objLimpiar = "limpiar"
 objLlevarACuna = "llevarCuna"
-objMoverCuna = "moverCuna"
 objVagancia = "vagancia"
+objDejarEnLaCuna = "dejarEnLaCuna"
 objCaminarHastaSuciedad = "caminarSuciedad"
+objFantasma = ""
 
 crearNinho :: Int->Int -> Ninho
 crearNinho x y = Ninho x y
@@ -44,7 +45,7 @@ crearObstaculo x y = Obstaculo x y
 crearCargado x y = Cargado x y
 crearVacio = Vacio
 
-crearObjetivo :: String -> Robot -> Int -> (Int, Int) -> Int -> Int -> Objetivo
+crearObjetivo :: String -> Robot -> Float -> (Int, Int) -> Int -> Int -> Objetivo
 crearObjetivo tipo r costo p objx objy= Objetivo r costo tipo p objx objy
 
 instance Posicion Vacio where

@@ -5,12 +5,12 @@ import Escribir
 import Listas
 
 nuevaX:: Posicion p => Tablero -> p -> Int -> Int
-nuevaX t p dx | nx == (ancho t) || nx == -1 = (x p)
+nuevaX t p dx | nx >= (ancho t) || nx <= -1 = (x p)
                         | otherwise = nx
                         where nx = (x p) + dx 
 
 nuevaY :: Posicion p => Tablero -> p -> Int -> Int
-nuevaY t p dy | ny == (largo t) || ny == -1 = (y p)
+nuevaY t p dy | ny >= (largo t) || ny <= -1 = (y p)
               | otherwise = ny
               where ny = (y p) + dy
 
@@ -51,6 +51,11 @@ moverAbajo t p = mover t p 0 1
 moverDerecha t p = mover t p 1 0
 moverIzquierda t p = mover t p (-1) 0
 
+mover2Arriba t p = mover t p 0 (-2)
+mover2Abajo t p = mover t p 0 2
+mover2Derecha t p = mover t p 2 0
+mover2Izquierda t p = mover t p (-2) 0
+
 limpiar :: Tablero -> Robot -> Tablero
 limpiar t r = borrar t sucio
              where sucio = crearSuciedad (x r) (y r)
@@ -73,9 +78,19 @@ moverObstaculo t o dx dy | nx == (x o) && ny == (y o) = t
                                ny = nuevaY t o dy 
 
 moverRobot :: Tablero -> Robot -> Int -> Int -> Tablero
-moverRobot t r dx dy | not(robotPuedeMoverse t r nx ny) = t
+moverRobot t r dx dy 
+                     | not(robotPuedeMoverse t r nx ny) = t
+                     | abs dx > 1 || abs dy > 1 =  let tm2 = mover t r ndx ndy
+                                                   in mover tm2 r2 ndx ndy    
                      | hayNinho t nx ny = let tableroCargue = cargar nuevoT nx ny in moverRobotLibre tableroCargue r dx dy
                      | otherwise = moverRobotLibre nuevoT r dx dy
-                     where nx = nuevaX t r dx
-                           ny = nuevaY t r dy
-                           nuevoT = borrar t (crearRobot (x r) (y r))    
+                     where  xr = x r
+                            yr = y r
+                            ndx = if dx == 0 then 0 else (div dx (abs (dx)))
+                            ndy = if dy == 0 then 0 else (div dy (abs (dy)))
+                            n1x = xr + ndx
+                            n1y = yr + ndy
+                            r2 = crearRobot n1x n1y
+                            nx = nuevaX t r dx
+                            ny = nuevaY t r dy
+                            nuevoT = borrar t (crearRobot (x r) (y r))    

@@ -3,6 +3,7 @@ where
 
 import Elementos
 import Listas
+import GHC.Int
 
 data Tablero = Tablero{largo::Int,
                         ancho::Int,
@@ -57,7 +58,26 @@ ninhoPuedeMoverse :: Tablero -> Ninho -> Int -> Int -> Bool
 ninhoPuedeMoverse t n xx yy = (estaVacio t xx yy) && (not(estaCargado t (x n) (y n))) && (noEstaEnElCorral t n)
 
 robotPuedeMoverse :: Tablero -> Robot -> Int -> Int -> Bool
-robotPuedeMoverse t r nx ny = (noHayObstaculo t nx ny) && not(pertenece (crearRobot nx ny) (robots t)) && (not (hayNinho t nx ny) || not (estaCargado t (x r) (y r)))
+robotPuedeMoverse t r nx ny
+    | modx <= 1 && mody <= 1 = (noHayObstaculo t nx ny) && not(pertenece (crearRobot nx ny) (robots t)) && (not (hayNinho t nx ny) || not (estaCargado t (x r) (y r)))
+    | otherwise = (estaCargado t xr yr) && (robotPuedeMoverse t r n1x n1y) && (robotPuedeMoverse t2 r2 nx ny)
+    where
+        xr = x r
+        yr = y r
+        dx = nx - xr
+        dy = ny - yr
+        modx = abs (nx - xr)
+        mody = abs (ny - yr)
+        ndx = if dx == 0 then 0 else (div dx (abs (dx)))
+        ndy = if dy == 0 then 0 else (div dy (abs (dy)))
+        n1x = xr + ndx
+        n1y = yr + ndy
+        r2 = crearRobot n1x n1y
+        nuevoCargados = if estaCargado t xr yr
+                        then agregar (crearCargado n1x n1y) (cargados t)
+                        else cargados t
+        nuevoRobots = agregar r2 (robots t)
+        t2 = Tablero (largo t) (ancho t) (suciedad t) nuevoRobots (cuna t) (ninhos t) (obstaculos t) nuevoCargados (objetivos t) (semilla t)
 
 estaCargado t x y = pertenece (crearCargado x y) (cargados t)
 

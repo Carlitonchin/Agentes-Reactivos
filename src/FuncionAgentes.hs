@@ -43,8 +43,15 @@ cumplirObjetivo t r o
     | tipo == objVagancia = t
     | tipo == objCaminarHastaSuciedad = cumplirObjetivoCaminarLimpiar t r o
     | tipo == objLimpiar = cumplirObjetivoLimpiar t (x r) (y r)
+    | tipo == objCargarNinho = daElPaso t r p1X p1Y
+    | tipo == objLlevarACuna = daElPaso t r p1X p1Y
+    | tipo == objDejarEnLaCuna = dejarEnLaCuna t r
     | otherwise = t
-    where tipo = tipoObjetivo o
+    where 
+        tipo = tipoObjetivo o
+        paso1 = paso o
+        p1X = fst paso1
+        p1Y = snd paso1
 
 cumplirObjetivoLimpiar :: Tablero -> Int -> Int -> Tablero
 cumplirObjetivoLimpiar t sx sy = borrar t (crearSuciedad sx sy)
@@ -72,3 +79,6 @@ daElPaso t r px py
         dy = py - ry
         objDeR = filtrar (objetivos t) r []
         tSinObjDeR = limpiarObjetivos t objDeR
+
+dejarEnLaCuna :: Tablero -> Robot -> Tablero
+dejarEnLaCuna t r = descargar t (x r) (y r)
