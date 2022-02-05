@@ -15,7 +15,7 @@ quitarTodos [] fuente = fuente
 quitarTodos (f:r) fuente = quitarTodos r (eliminar f fuente)
 
 indexar :: [a] -> Int -> a
-indexar [] i = error "Index out of range"
+indexar [] i = error "HHHHHHHHHHHHHHHHHHHHHHHH"
 indexar (f:r) i | i == 0 = f
                 | otherwise = indexar r (i-1)
 

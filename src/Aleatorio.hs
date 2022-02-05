@@ -9,10 +9,19 @@ random :: Tablero -> Tablero
 random t = crearTablero (largo t) (ancho t) (suciedad t) (robots t) (cuna t) (ninhos t) (obstaculos t) (cargados t) (objetivos t) (generar (semilla t))
 
 generar :: Int -> Int
-generar s = div (div (div ((s*25+44) * 5) 2) 3)  2
+generar s = let h = div (div (div ((s*25+44) * 5) 2) 3)  2
+            in
+                  if h > 1000000
+                  then 1
+                  else h
 
 randomNum :: Int -> Int -> Int
-randomNum max sem = abs (mod sem max)
+randomNum max sem = let 
+                        ret = abs (mod sem max)
+                    in 
+                          if (ret < 0) || (ret >= max)
+                          then 0
+                          else ret
 
 getPosicion :: Tablero -> [[a]] -> [a]
 getPosicion t espaciosVacios = let rNum = randomNum (length espaciosVacios) (semilla t)
